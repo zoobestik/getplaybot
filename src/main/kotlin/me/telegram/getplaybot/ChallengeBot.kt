@@ -4,17 +4,33 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import me.telegram.getplaybot.handles.handleRegisterApprove
 import me.telegram.getplaybot.handles.handleRegisterInvite
+import me.telegram.getplaybot.handles.handleScores
 import me.telegram.getplaybot.handles.handleWelcome
 import me.telegram.getplaybot.lib.getEnv
 import me.telegram.getplaybot.lib.whenNotNull
 import me.telegram.getplaybot.models.User
-import me.telegram.getplaybot.services.user.get
+import me.telegram.getplaybot.services.users.get
 import org.telegram.telegrambots.api.methods.send.SendMessage
+import org.telegram.telegrambots.api.methods.send.SendPhoto
 import org.telegram.telegrambots.api.objects.Message
 import org.telegram.telegrambots.api.objects.Update
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 
 typealias TextMessageReply = suspend (SendMessage) -> String
+typealias MessageBody = suspend (SendMessage) -> Unit
+typealias MessagePhotoBody = suspend (SendPhoto) -> Unit
+
+data class Handler(val name: String) {
+    fun isDo(text: String) = text == "/$name" || text.startsWith("/$name ")
+    fun getPayload(text: String) = text.removePrefix("/$name").trim()
+}
+
+val handlers = listOf(
+        Handler("start"),
+        Handler("scores"),
+        Handler("invite"),
+        Handler("reg")
+)
 
 class ChallengeHandlers : TelegramLongPollingBot() {
     override fun getBotToken(): String = getEnv("BOT_CHALLENGE_TOKEN")
@@ -30,13 +46,27 @@ class ChallengeHandlers : TelegramLongPollingBot() {
 
     suspend fun handleIncomingTextMessage(message: Message) {
         val text = message.text.trim()
+        val user = initUser(message) // @ToDo: lazy
+        val handler = handlers.find { it.isDo(text) }
 
-        val user = initUser(message)
-        when {
-            text == "/start" -> replyTextMessage(message) { handleWelcome(user, message.from) }
-            text == "/invite" -> replyTextMessage(message) { handleRegisterInvite(user) }
-            text.startsWith("/reg ") -> replyTextMessage(message) {
-                handleRegisterApprove(text.removePrefix("/reg ").trim(), user)
+        if (handler != null) {
+            when (handler.name) {
+                "start" -> sendMDMessage(message) {
+                    handleWelcome(user, message.from, handler.getPayload(text))
+                }
+
+                "scores" -> sendImage(message) {
+                    handleScores(it)
+                }
+
+                "invite" -> sendMDMessage(message) {
+                    handleRegisterInvite(user)
+                }
+
+                "reg" -> sendMDMessage(message) {
+                    it.enableMarkdown(true)
+                    handleRegisterApprove(user, handler.getPayload(text))
+                }
             }
         }
     }
@@ -46,10 +76,24 @@ class ChallengeHandlers : TelegramLongPollingBot() {
         return get(from.id) ?: User(from.id, message.chatId)
     }
 
-    suspend fun replyTextMessage(message: Message, body: TextMessageReply): Unit {
-        val replyMessage = SendMessage()
-        replyMessage.setChatId(message.chatId)
-        replyMessage.text = body(replyMessage)
-        sendMessage(replyMessage)
+    suspend fun sendImage(message: Message, body: MessagePhotoBody): Unit {
+        val reply = SendPhoto()
+        reply.setChatId(message.chatId)
+        body(reply)
+        sendPhoto(reply)
+    }
+
+    suspend fun send(message: Message, body: MessageBody): Unit {
+        val reply = SendMessage()
+        reply.setChatId(message.chatId)
+        body(reply)
+        sendMessage(reply)
+    }
+
+    suspend fun sendMDMessage(message: Message, body: TextMessageReply): Unit {
+        send(message) {
+            it.enableMarkdown(true)
+            it.text = body(it)
+        }
     }
 }

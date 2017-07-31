@@ -11,5 +11,5 @@ data class User(
     val name
         get() = if (username.isEmpty()) lastName + firstName else username
 
-    fun check(name: Permission) = permissions.getValue(name)
+    fun check(name: Permission) = permissions.getOrDefault(name, false)
 }

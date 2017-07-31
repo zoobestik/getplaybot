@@ -4,8 +4,8 @@ import java.util.*
 
 data class Invite(
         val senderId: Int,
-        val league: String,
         val code: String,
+        val leagueId: String,
         var approveUserId: Int? = null,
         var approveDate: Date? = null
 ) {

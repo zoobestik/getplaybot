@@ -1,4 +1,4 @@
-package me.telegram.getplaybot.services.user
+package me.telegram.getplaybot.services.users
 
 import me.telegram.getplaybot.models.User
 import me.telegram.getplaybot.models.permissionsAdmin
