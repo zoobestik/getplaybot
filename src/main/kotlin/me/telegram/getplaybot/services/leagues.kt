@@ -10,8 +10,8 @@ private val leagues = mapOf(
 
 private val teams: MutableList<Team> = mutableListOf()
 
-suspend fun addTeam(leagueId: String, userId: Int): Team {
-    val team = Team(teams.size.toString(), leagueId, userId)
+suspend fun addTeam(userId: Int): Team {
+    val team = Team(teams.size.toString(), userId)
     teams.add(team)
     return team
 }
@@ -22,5 +22,5 @@ suspend fun get(id: String): League? = leagues[id]
 
 suspend fun add(leagueId: String, user: User) {
     val league = get(leagueId) ?: throw LeagueNotFound()
-    league.teams.add(addTeam(leagueId, user.id))
+    league.teams.add(addTeam(user.id))
 }

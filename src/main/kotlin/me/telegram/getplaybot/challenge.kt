@@ -2,10 +2,7 @@ package me.telegram.getplaybot
 
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
-import me.telegram.getplaybot.handles.handleRegisterApprove
-import me.telegram.getplaybot.handles.handleRegisterInvite
-import me.telegram.getplaybot.handles.handleScores
-import me.telegram.getplaybot.handles.handleWelcome
+import me.telegram.getplaybot.handles.*
 import me.telegram.getplaybot.lib.getEnv
 import me.telegram.getplaybot.lib.whenNotNull
 import me.telegram.getplaybot.models.User
@@ -27,7 +24,13 @@ data class Handler(val name: String) {
 
 val handlers = listOf(
         Handler("start"),
+
         Handler("scores"),
+        Handler("last"),
+
+        Handler("me"),
+        Handler("vote"),
+
         Handler("invite"),
         Handler("reg")
 )
@@ -55,14 +58,23 @@ class ChallengeHandlers : TelegramLongPollingBot() {
                     handleWelcome(user, message.from, handler.getPayload(text))
                 }
 
-                "scores" -> sendImage(message) {
-                    handleScores(it)
+                "scores" -> sendMDMessage(message) {
+                    handleScores()
+                }
+                "last" -> sendMDMessage(message) {
+                    handleMatchDay()
+                }
+
+                "me" -> sendMDMessage(message) {
+                    handleMe(user)
+                }
+                "vote" -> sendMDMessage(message) {
+                    handleVote(user)
                 }
 
                 "invite" -> sendMDMessage(message) {
                     handleRegisterInvite(user)
                 }
-
                 "reg" -> sendMDMessage(message) {
                     it.enableMarkdown(true)
                     handleRegisterApprove(user, handler.getPayload(text))
