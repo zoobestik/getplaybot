@@ -5,7 +5,7 @@ import me.telegram.getplaybot.challenge.models.permissionsAdmin
 import org.telegram.telegrambots.api.objects.User as TelegramUser
 
 private val users = mutableMapOf<Int, User>(
-        4809181 to User(4809181, null, permissions = permissionsAdmin)
+    4809181 to User(4809181, null, permissions = permissionsAdmin)
 )
 
 suspend fun get(id: Int): User? = users[id]

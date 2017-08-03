@@ -1,7 +1,11 @@
-package me.telegram.getplaybot.challenge.i18n
+package me.telegram.getplaybot.challenge.i18n.commands
 
-val commands = mapOf(
-        "scores" to "посмтреть таблицу результатов",
-        "invite" to "получить инвайт–ссылку для друга",
-        "reg" to "принять приглашение для участия в турнире"
+import me.telegram.getplaybot.lib.i18n
+
+private val list = mapOf(
+    "scores" to "посмтреть таблицу результатов",
+    "invite" to "получить инвайт–ссылку для друга",
+    "reg" to "принять приглашение для участия в турнире"
 )
+
+fun i18n(key: String) = i18n(list, key)

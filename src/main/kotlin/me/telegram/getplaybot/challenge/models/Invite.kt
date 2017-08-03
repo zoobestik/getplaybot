@@ -3,12 +3,11 @@ package me.telegram.getplaybot.challenge.models
 import java.util.*
 
 data class Invite(
-        val senderId: Int,
-        val code: String,
-        val leagueId: String,
-        var approveUserId: Int? = null,
-        var approveDate: Date? = null
+    val senderId: Int,
+    val code: String,
+    val leagueId: String,
+    var approveUserId: Int? = null,
+    var approveDate: Date? = null
 ) {
-    val isActive: Boolean
-        get() = approveDate == null
+    val isActive = approveDate == null
 }

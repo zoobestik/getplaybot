@@ -1,7 +1,11 @@
-.gradle
+.DS_Store
 .idea
+*.iml
+Thumbs.db
+*.swp
+
+.gradle
 build
-getplaybot.iml
 gradle
 gradlew
 gradlew.bat

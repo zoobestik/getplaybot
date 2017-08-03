@@ -2,11 +2,16 @@ package me.telegram.getplaybot.challenge
 
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
-import me.telegram.getplaybot.challenge.handles.*
+import me.telegram.getplaybot.challenge.handles.handleVote
+import me.telegram.getplaybot.challenge.handles.handleWelcome
+import me.telegram.getplaybot.challenge.handles.registration.handleRegisterApprove
+import me.telegram.getplaybot.challenge.handles.registration.handleRegisterInvite
+import me.telegram.getplaybot.challenge.handles.stats.handleMatchDay
+import me.telegram.getplaybot.challenge.handles.stats.handleMe
+import me.telegram.getplaybot.challenge.handles.stats.handleScores
 import me.telegram.getplaybot.challenge.models.User
 import me.telegram.getplaybot.challenge.services.users.get
 import me.telegram.getplaybot.lib.getEnv
-import me.telegram.getplaybot.lib.whenNotNull
 import org.telegram.telegrambots.api.methods.send.SendMessage
 import org.telegram.telegrambots.api.methods.send.SendPhoto
 import org.telegram.telegrambots.api.objects.Message
@@ -24,7 +29,7 @@ abstract class TextHandle(val name: String) {
     fun getPayload(text: String) = text.removePrefix("/$name").trim()
 
     suspend fun run(message: Message, user: User, text: String) =
-            execute(message, user, getPayload(text))
+        execute(message, user, getPayload(text))
 }
 
 class ChallengeHandlers : TelegramLongPollingBot() {
@@ -33,52 +38,52 @@ class ChallengeHandlers : TelegramLongPollingBot() {
 
     override fun onUpdateReceived(update: Update?) {
         launch(CommonPool) {
-            whenNotNull(update?.message) { message ->
+            update?.message?.let { message ->
                 if (message.hasText()) handleIncomingTextMessage(message)
             }
         }
     }
 
     val handlers = listOf(
-            object : TextHandle("start") {
-                suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
-                    if (payload.isEmpty()) handleWelcome(user, message.from)
-                    else handleRegisterApprove(user, payload)
-                }
-            },
-
-            object : TextHandle("scores") {
-                suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
-                    handleScores()
-                }
-            },
-            object : TextHandle("last") {
-                suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
-                    handleMatchDay()
-                }
-            },
-
-            object : TextHandle("me") {
-                suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
-                    handleMe(user)
-                }
-            },
-            object : TextHandle("vote") {
-                suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
-                    handleVote(user)
-                }
-            },
-
-            object : TextHandle("invite") {
-                suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
-                    handleRegisterInvite(user, botUsername)
-                }
-            },
-            object : TextHandle("reg") {
-                suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
-                    handleRegisterApprove(user, payload)
-                }
+        object : TextHandle("start") {
+            suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
+                if (payload.isEmpty()) handleWelcome(user, message.from)
+                else handleRegisterApprove(user, payload)
             }
+        },
+
+        object : TextHandle("scores") {
+            suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
+                handleScores()
+            }
+        },
+        object : TextHandle("last") {
+            suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
+                handleMatchDay()
+            }
+        },
+
+        object : TextHandle("me") {
+            suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
+                handleMe(user)
+            }
+        },
+        object : TextHandle("vote") {
+            suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
+                handleVote(user)
+            }
+        },
+
+        object : TextHandle("invite") {
+            suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
+                handleRegisterInvite(user, botUsername)
+            }
+        },
+        object : TextHandle("reg") {
+            suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
+                handleRegisterApprove(user, payload)
+            }
+        }
     )
 
     suspend fun handleIncomingTextMessage(message: Message) {
@@ -86,7 +91,7 @@ class ChallengeHandlers : TelegramLongPollingBot() {
         val text = message.text.trim()
         val user = get(id) ?: User(id, message.chatId)
         val handle = handlers.find { it.isDo(text) } ?:
-                return
+            return
 
         handle.run(message, user, text)
     }

@@ -7,9 +7,9 @@ enum class Permission {
 typealias Permissions = Map<Permission, Boolean>;
 
 val permissionsDefault = mapOf<Permission, Boolean>(
-        Permission.CORE to true
+    Permission.CORE to true
 )
 
 val permissionsAdmin = permissionsDefault.plus(mapOf(
-        Permission.INVITE to true
+    Permission.INVITE to true
 ))
