@@ -1,4 +1,4 @@
-package me.telegram.getplaybot.lib
+package me.telegram.getplaybot.lib.convert
 
 import javafx.application.Platform
 import javafx.embed.swing.SwingFXUtils

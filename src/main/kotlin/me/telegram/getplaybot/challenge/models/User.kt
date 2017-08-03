@@ -1,4 +1,4 @@
-package me.telegram.getplaybot.models
+package me.telegram.getplaybot.challenge.models
 
 data class User(
         val id: Int,

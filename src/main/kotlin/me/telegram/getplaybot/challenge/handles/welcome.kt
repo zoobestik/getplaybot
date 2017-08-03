@@ -1,11 +1,11 @@
-package me.telegram.getplaybot.handles
+package me.telegram.getplaybot.challenge.handles
 
+import me.telegram.getplaybot.challenge.i18n.commands
+import me.telegram.getplaybot.challenge.i18n.welcome_prefix
+import me.telegram.getplaybot.challenge.models.Permission
+import me.telegram.getplaybot.challenge.models.User
+import me.telegram.getplaybot.challenge.services.users.save
 import me.telegram.getplaybot.lib.TelegramUser
-import me.telegram.getplaybot.lib.i18n.commands
-import me.telegram.getplaybot.lib.i18n.welcome_prefix
-import me.telegram.getplaybot.models.Permission
-import me.telegram.getplaybot.models.User
-import me.telegram.getplaybot.services.users.save
 
 data class Feature(val name: String, val permission: Permission = Permission.CORE)
 
@@ -15,16 +15,12 @@ val features = listOf(
         Feature("invite", Permission.INVITE)
 )
 
-suspend fun handleWelcome(user: User, from: TelegramUser, payload: String): String {
+suspend fun handleWelcome(user: User, from: TelegramUser): String {
     user.username = from.userName
     user.firstName = from.firstName
     user.lastName = from.lastName
 
     save(user)
-
-    if (payload.isNotEmpty()) {
-        //...
-    }
 
     return welcome_prefix(user.name) + "\n\n" + list(user)
 }

@@ -1,4 +1,4 @@
-package me.telegram.getplaybot.lib.i18n
+package me.telegram.getplaybot.challenge.i18n
 
 val commands = mapOf(
         "scores" to "посмтреть таблицу результатов",

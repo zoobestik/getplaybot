@@ -1,4 +1,4 @@
-package me.telegram.getplaybot.lib.i18n
+package me.telegram.getplaybot.challenge.i18n
 
 fun welcome_prefix(name: String) =
         "Добро пожаловать, *$name*!\n\n" +

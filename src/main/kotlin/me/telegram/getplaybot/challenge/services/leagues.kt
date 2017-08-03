@@ -1,8 +1,8 @@
-package me.telegram.getplaybot.services.leagues
+package me.telegram.getplaybot.challenge.services.leagues
 
-import me.telegram.getplaybot.models.League
-import me.telegram.getplaybot.models.Team
-import me.telegram.getplaybot.models.User
+import me.telegram.getplaybot.challenge.models.League
+import me.telegram.getplaybot.challenge.models.Team
+import me.telegram.getplaybot.challenge.models.User
 
 private val leagues = mapOf(
         "champions-2017" to League("champions-2017")

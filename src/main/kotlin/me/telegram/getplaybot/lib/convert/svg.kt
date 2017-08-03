@@ -1,4 +1,4 @@
-package me.telegram.getplaybot.lib
+package me.telegram.getplaybot.lib.convert
 
 import org.apache.batik.transcoder.TranscoderInput
 import org.apache.batik.transcoder.TranscoderOutput
