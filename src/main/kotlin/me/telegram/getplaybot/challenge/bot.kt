@@ -46,9 +46,9 @@ class ChallengeHandlers : TelegramLongPollingBot() {
 
     val handlers = listOf(
         object : TextHandle("start") {
-            suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
-                if (payload.isEmpty()) handleWelcome(user, message.from)
-                else handleRegisterApprove(user, payload)
+            suspend override fun execute(message: Message, user: User, payload: String) {
+                if (payload.isNotEmpty()) markdown(message) { handleRegisterApprove(user, payload) }
+                markdown(message) { handleWelcome(user, message.from) }
             }
         },
 
@@ -75,8 +75,8 @@ class ChallengeHandlers : TelegramLongPollingBot() {
         },
 
         object : TextHandle("invite") {
-            suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
-                handleRegisterInvite(user, botUsername)
+            suspend override fun execute(message: Message, user: User, payload: String) {
+                handleRegisterInvite(user, botUsername).forEach { text -> markdown(message) { text } }
             }
         },
         object : TextHandle("reg") {

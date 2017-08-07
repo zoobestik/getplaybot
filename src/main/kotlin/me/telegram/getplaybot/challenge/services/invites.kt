@@ -29,6 +29,8 @@ suspend fun invite(user: User, leagueId: String): Invite {
 
 suspend fun get(code: String): Invite? = invites[code]
 
+suspend fun countInvites(user: User) = 0
+
 suspend fun register(code: String, user: User): Invite {
     val invite = get(code)
     if (invite == null || !invite.isActive) throw InviteCodeInvalid()

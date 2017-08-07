@@ -8,6 +8,8 @@ data class User(
     var lastName: String = "",
     val permissions: Permissions = permissionsDefault
 ) {
-    val name = if (username.isEmpty()) lastName + firstName else username
-    fun check(name: Permission) = permissions.getOrDefault(name, false)
+    val name
+        get() = if (username.isEmpty()) lastName + firstName else username
+
+    fun check(name: Permission) = permissions[name] ?: false
 }

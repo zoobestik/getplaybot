@@ -4,7 +4,7 @@ enum class Permission {
     CORE, INVITE,
 }
 
-typealias Permissions = Map<Permission, Boolean>;
+typealias Permissions = Map<Permission, Boolean>
 
 val permissionsDefault = mapOf<Permission, Boolean>(
     Permission.CORE to true

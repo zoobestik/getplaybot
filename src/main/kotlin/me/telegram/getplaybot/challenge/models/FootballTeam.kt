@@ -1,6 +1,6 @@
 package me.telegram.getplaybot.challenge.models
 
-data class League(
+data class FootballTeam(
     val id: String,
-    val teams: MutableList<Team> = mutableListOf()
+    val name: FootballTeam
 )

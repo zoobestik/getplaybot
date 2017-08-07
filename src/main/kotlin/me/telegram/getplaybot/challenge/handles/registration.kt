@@ -3,13 +3,11 @@ package me.telegram.getplaybot.challenge.handles.registration
 import me.telegram.getplaybot.challenge.i18n.registration.done
 import me.telegram.getplaybot.challenge.i18n.registration.i18n
 import me.telegram.getplaybot.challenge.models.User
-import me.telegram.getplaybot.challenge.services.invites.InviteCodeInvalid
-import me.telegram.getplaybot.challenge.services.invites.InviteCodesAbsent
-import me.telegram.getplaybot.challenge.services.invites.invite
-import me.telegram.getplaybot.challenge.services.invites.register
+import me.telegram.getplaybot.challenge.services.invites.*
 import me.telegram.getplaybot.challenge.services.leagues.LeagueNotFound
 import me.telegram.getplaybot.challenge.services.leagues.TeamAlreadyIn
 import me.telegram.getplaybot.lib.bindText
+import me.telegram.getplaybot.challenge.i18n.registration.remains as remainsText
 
 class InviteParamRequire : Exception()
 
@@ -26,7 +24,14 @@ val approveError = bindText { e: Exception ->
     )
 }
 
-suspend fun handleRegisterInvite(user: User, botUsername: String): String {
+suspend fun handleRegisterInvite(user: User, botUsername: String): List<String> {
+    val messages = mutableListOf(registerInvite(user, botUsername))
+    val remains = countInvites(user)
+    if (remains > 0) messages.add(remainsText(remains))
+    return messages
+}
+
+suspend fun registerInvite(user: User, botUsername: String): String {
     try {
         val code = invite(user, "champions-2017").code
         return "https://telegram.me/$botUsername?start=$code"

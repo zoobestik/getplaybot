@@ -13,3 +13,4 @@ private val list = mapOf(
 
 fun i18n(key: String) = i18n(list, key)
 fun done(name: String) = "Я добавил вас в турнир — $name!"
+fun remains(count: Int) = "Инвайтов осталось – $count"

@@ -17,7 +17,7 @@ class LeagueNotFound : Exception()
 suspend fun get(id: String): League? = leagues[id]
 
 suspend fun add(leagueId: String, user: User) {
-    val userId = user.id;
+    val userId = user.id
     val league = get(leagueId) ?: throw LeagueNotFound()
     if (league.teams.any { userId == it.userId }) throw TeamAlreadyIn()
 

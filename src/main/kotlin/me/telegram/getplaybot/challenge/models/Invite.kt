@@ -9,5 +9,6 @@ data class Invite(
     var approveUserId: Int? = null,
     var approveDate: Date? = null
 ) {
-    val isActive = approveDate == null
+    val isActive
+        get() = approveDate == null
 }
