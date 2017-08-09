@@ -1,110 +1,95 @@
 package me.telegram.getplaybot.challenge.models
 
+import org.junit.Assert.assertEquals
+import org.junit.Ignore
 import org.junit.Test
-import org.junit.Assert.*
 
 class MatchResultTest {
     @Test
-    fun getWinner() {
+    fun scoresGraphs() {
+        printGraph(MatchResult(0, 0))
+        println()
+        printGraph(MatchResult(1, 0))
+        println()
+        printGraph(MatchResult(2, 0))
+        println()
+        printGraph(MatchResult(3, 0))
+        println()
+        printGraph(MatchResult(3, 2))
+        println()
+        printGraph(MatchResult(3, 3))
+        println()
+        printGraph(MatchResult(6, 4))
     }
 
     @Test
-    fun scoresWithGoals() {
-        val result = MatchResult(6, 4)
-
-        assertEquals(14, MatchResult(6, 6).scores(result))
-        assertEquals(34, MatchResult(6, 5).scores(result))
-        assertEquals(40, MatchResult(6, 4).scores(result))
-        assertEquals(33, MatchResult(6, 3).scores(result))
-        assertEquals(32, MatchResult(6, 2).scores(result))
-        assertEquals(31, MatchResult(6, 1).scores(result))
-        assertEquals(30, MatchResult(6, 0).scores(result))
-
-        assertEquals(5, MatchResult(5, 6).scores(result))
-        assertEquals(5, MatchResult(5, 5).scores(result))
-        assertEquals(32, MatchResult(5, 4).scores(result))
-        assertEquals(25, MatchResult(5, 3).scores(result))
-        assertEquals(25, MatchResult(5, 2).scores(result))
-        assertEquals(25, MatchResult(5, 1).scores(result))
-        assertEquals(25, MatchResult(5, 0).scores(result))
-
-        assertEquals(5, MatchResult(4, 6).scores(result))
-        assertEquals(5, MatchResult(4, 5).scores(result))
-        assertEquals(11, MatchResult(4, 4).scores(result))
-        assertEquals(25, MatchResult(4, 3).scores(result))
-        assertEquals(25, MatchResult(4, 2).scores(result))
-        assertEquals(25, MatchResult(4, 1).scores(result))
-        assertEquals(24, MatchResult(4, 0).scores(result))
-
-        assertEquals(5, MatchResult(3, 6).scores(result))
-        assertEquals(5, MatchResult(3, 5).scores(result))
-        assertEquals(10, MatchResult(3, 4).scores(result))
-        assertEquals(5, MatchResult(3, 3).scores(result))
-        assertEquals(25, MatchResult(3, 2).scores(result))
-        assertEquals(24, MatchResult(3, 1).scores(result))
-        assertEquals(23, MatchResult(3, 0).scores(result))
-
-        assertEquals(5, MatchResult(2, 6).scores(result))
-        assertEquals(5, MatchResult(2, 5).scores(result))
-        assertEquals(9, MatchResult(2, 4).scores(result))
-        assertEquals(5, MatchResult(2, 3).scores(result))
-        assertEquals(4, MatchResult(2, 2).scores(result))
-        assertEquals(23, MatchResult(2, 1).scores(result))
-        assertEquals(22, MatchResult(2, 0).scores(result))
-
-        assertEquals(5, MatchResult(1, 6).scores(result))
-        assertEquals(5, MatchResult(1, 5).scores(result))
-        assertEquals(8, MatchResult(1, 4).scores(result))
-        assertEquals(4, MatchResult(1, 3).scores(result))
-        assertEquals(3, MatchResult(1, 2).scores(result))
-        assertEquals(2, MatchResult(1, 1).scores(result))
-        assertEquals(21, MatchResult(1, 0).scores(result))
-
-        assertEquals(4, MatchResult(0, 6).scores(result))
-        assertEquals(4, MatchResult(0, 5).scores(result))
-        assertEquals(7, MatchResult(0, 4).scores(result))
-        assertEquals(3, MatchResult(0, 3).scores(result))
-        assertEquals(2, MatchResult(0, 2).scores(result))
-        assertEquals(1, MatchResult(0, 1).scores(result))
-        assertEquals(0, MatchResult(0, 0).scores(result))
+    fun scores6vs4() {
+        assertMatches(MatchResult(6, 4), listOf(
+            /* 0-N */ -4, -3, -2, -1, 2, -1, -2,
+            /* 1-N */ 9, -2, -1, 0, 3, 0, -1,
+            /* 2-N */ 10, 11, 0, 1, 4, 1, 0,
+            /* 3-N */ 11, 12, 13, 2, 5, 2, 1,
+            /* 4-N */ 12, 13, 14, 15, 6, 3, 2,
+            /* 5-N */ 13, 14, 15, 16, 19, 4, 3,
+            /* 6-N */ 17, 18, 19, 20, 25, 20, 7
+        ))
     }
 
     @Test
-    fun scoresWithWhitewash() {
-        val result = MatchResult(5, 0)
-
-        assertEquals(MatchResult(5, 0).scores(result), 25)
-        assertEquals(MatchResult(5, 4).scores(result), 18)
-        assertEquals(MatchResult(5, 0).scores(result), 15)
-        assertEquals(MatchResult(5, 5).scores(result), 5)
-        assertEquals(MatchResult(3, 5).scores(result), 20)
-        assertEquals(MatchResult(0, 5).scores(result), 3)
-        assertEquals(MatchResult(0, 0).scores(result), 0)
+    fun scores2vs2() {
+        assertMatches(MatchResult(2, 2), listOf(
+            /* 0-N */ 14, 3, 7, 3, 2, 1, 0,
+            /* 1-N */ 3, 16, 8, 4, 3, 2, 1,
+            /* 2-N */ 7, 8, 25, 8, 7, 6, 5,
+            /* 3-N */ 3, 4, 8, 16, 3, 2, 1,
+            /* 4-N */ 2, 3, 7, 3, 14, 1, 0,
+            /* 5-N */ 1, 2, 6, 2, 1, 12, -1,
+            /* 6-N */ 0, 1, 5, 1, 0, -1, 10
+        ))
     }
 
     @Test
-    fun scoresDrawWithGoals() {
-        val result = MatchResult(2, 2)
-
-        assertEquals(MatchResult(2, 2).scores(result), 25)
-        assertEquals(MatchResult(5, 4).scores(result), 18)
-        assertEquals(MatchResult(5, 0).scores(result), 15)
-        assertEquals(MatchResult(5, 5).scores(result), 5)
-        assertEquals(MatchResult(3, 5).scores(result), 20)
-        assertEquals(MatchResult(0, 5).scores(result), 3)
-        assertEquals(MatchResult(0, 0).scores(result), 0)
+    fun scores0vs0() {
+        assertMatches(MatchResult(0, 0), listOf(
+            /* 0-N */ 25, 8, 7, 6, 5, 4, 3,
+            /* 1-N */ 8, 16, 3, 2, 1, 0, -1,
+            /* 2-N */ 7, 3, 14, 1, 0, -1, -2,
+            /* 3-N */ 6, 2, 1, 12, -1, -2, -3,
+            /* 4-N */ 5, 1, 0, -1, 10, -3, -4,
+            /* 5-N */ 4, 0, -1, -2, -3, 9, -5,
+            /* 6-N */ 3, -1, -2, -3, -4, -5, 9
+        ))
     }
 
-    @Test
-    fun scoresWithZeros() {
-        val result = MatchResult(0, 0)
+    fun matches(block: (MatchResult) -> Unit) {
+        for (i in 0..6)
+            for (j in 0..6) {
+                block(MatchResult(i, j))
+            }
+    }
 
-        assertEquals(MatchResult(0, 0).scores(result), 25)
-        assertEquals(MatchResult(5, 4).scores(result), 18)
-        assertEquals(MatchResult(5, 0).scores(result), 15)
-        assertEquals(MatchResult(5, 5).scores(result), 5)
-        assertEquals(MatchResult(3, 5).scores(result), 20)
-        assertEquals(MatchResult(0, 5).scores(result), 3)
-        assertEquals(MatchResult(0, 0).scores(result), 0)
+    fun assertMatches(result: MatchResult, list: List<Int>) {
+        var i = 0
+        matches {
+            assertEquals("For ${it.home}—${it.away}", list[i++], it.scores(result))
+        }
+    }
+
+    fun printGraph(result: MatchResult) {
+        matches {
+            val scores = it.scores(result)
+            println("${it.home} — ${it.away}" +
+                (-25..25)
+                    .map {
+                        it in when {
+                            scores > 0 -> 0..scores
+                            scores < 0 -> scores..0
+                            else -> 0..0
+                        }
+                    }
+                    .map { if (it) '.' else ' ' }
+                    .joinToString("")
+            )
+        }
     }
 }
