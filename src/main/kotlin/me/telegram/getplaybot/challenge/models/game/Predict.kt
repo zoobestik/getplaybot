@@ -5,6 +5,8 @@ import me.telegram.getplaybot.challenge.models.sport.Match
 
 class PredictNotComplete : Exception()
 
+typealias PredictPoints = Pair<Int, Int>
+
 fun defaultPredict() = MatchResult(0, 0)
 
 data class Predict(
@@ -21,7 +23,7 @@ data class Predict(
     val computedAway
         get() = away ?: defaultPredict()
 
-    fun compute(): Pair<Int, Int> {
+    fun compute(): PredictPoints {
         val result = match.result ?: throw PredictNotComplete()
         return Pair(computedHome.scores(result), computedAway.scores(result))
     }

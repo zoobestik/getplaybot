@@ -1,6 +1,11 @@
 package me.telegram.getplaybot.challenge.models.game
 
-typealias RoundResult = Pair<Int, Int>
+import me.telegram.getplaybot.lib.IntWinner
+import me.telegram.getplaybot.lib.IntWinner.AWAY
+import me.telegram.getplaybot.lib.IntWinner.HOME
+
+typealias RoundTeamResult = Pair<Int, Int>
+data class RoundResult(val home: RoundTeamResult, val away: RoundTeamResult, val matches: List<PredictPoints>)
 
 data class Round(
     val id: String,
@@ -11,23 +16,22 @@ data class Round(
     val complete
         get() = predicts.all { it.complete }
 
-    fun compute(): Pair<RoundResult, RoundResult> {
-        val (home, away) = predicts.fold(Pair(0, 0)) { acc, predict ->
-            acc.let {
-                val scores = predict.compute()
-                acc.copy(scores.first, scores.second)
-            }
+    fun compute(): RoundResult {
+        val matches = predicts.map { it.compute() }
+        val (home, away) = matches.fold(PredictPoints(0, 0)) { acc, (home, away) ->
+            acc.copy(home, away)
         }
 
-        val (pointsHome, pointsAway) = when (home.compareTo(away)) {
-            1 -> Pair(3, 0)
-            -1 -> Pair(0, 3)
+        val (pointsHome, pointsAway) = when (IntWinner.valueOf(home.compareTo(away))) {
+            HOME -> Pair(3, 0)
+            AWAY -> Pair(0, 3)
             else -> Pair(1, 1)
         }
 
-        return Pair(
-            RoundResult(pointsHome, home),
-            RoundResult(pointsAway, away)
+        return RoundResult(
+            RoundTeamResult(pointsHome, home),
+            RoundTeamResult(pointsAway, away),
+            matches
         )
     }
 }
