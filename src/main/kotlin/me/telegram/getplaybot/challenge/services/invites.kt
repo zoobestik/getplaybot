@@ -1,8 +1,8 @@
 package me.telegram.getplaybot.challenge.services.invites
 
-import me.telegram.getplaybot.challenge.models.Invite
-import me.telegram.getplaybot.challenge.models.Permission
-import me.telegram.getplaybot.challenge.models.User
+import me.telegram.getplaybot.challenge.models.game.Invite
+import me.telegram.getplaybot.challenge.models.game.Permission
+import me.telegram.getplaybot.challenge.models.game.User
 import java.util.*
 import java.util.UUID.randomUUID
 import me.telegram.getplaybot.challenge.services.leagues.add as addToLeague

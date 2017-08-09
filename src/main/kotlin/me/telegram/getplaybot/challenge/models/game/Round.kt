@@ -1,4 +1,4 @@
-package me.telegram.getplaybot.challenge.models
+package me.telegram.getplaybot.challenge.models.game
 
 typealias RoundResult = Pair<Int, Int>
 
@@ -8,7 +8,8 @@ data class Round(
     val away: User,
     val predicts: List<Predict>
 ) {
-    fun isComplete() = predicts.all { it.result != null }
+    val complete
+        get() = predicts.all { it.complete }
 
     fun compute(): Pair<RoundResult, RoundResult> {
         val (home, away) = predicts.fold(Pair(0, 0)) { acc, predict ->
@@ -23,7 +24,7 @@ data class Round(
             -1 -> Pair(0, 3)
             else -> Pair(1, 1)
         }
-        
+
         return Pair(
             RoundResult(pointsHome, home),
             RoundResult(pointsAway, away)

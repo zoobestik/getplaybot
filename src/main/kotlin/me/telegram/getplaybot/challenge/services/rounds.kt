@@ -1,6 +1,6 @@
 package me.telegram.getplaybot.challenge.services.rounds
 
-import me.telegram.getplaybot.challenge.models.Round
+import me.telegram.getplaybot.challenge.models.game.Round
 
 private val matches = mutableMapOf<String, Round>()
 

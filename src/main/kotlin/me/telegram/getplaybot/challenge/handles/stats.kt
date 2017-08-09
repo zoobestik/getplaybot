@@ -1,7 +1,7 @@
 package me.telegram.getplaybot.challenge.handles.stats
 
 import me.telegram.getplaybot.challenge.i18n.scores.i18n
-import me.telegram.getplaybot.challenge.models.User
+import me.telegram.getplaybot.challenge.models.game.User
 import me.telegram.getplaybot.challenge.services.leagues.get
 
 suspend fun handleScores(): String {

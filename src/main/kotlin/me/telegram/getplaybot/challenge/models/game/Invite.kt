@@ -1,4 +1,4 @@
-package me.telegram.getplaybot.challenge.models
+package me.telegram.getplaybot.challenge.models.game
 
 import java.util.*
 

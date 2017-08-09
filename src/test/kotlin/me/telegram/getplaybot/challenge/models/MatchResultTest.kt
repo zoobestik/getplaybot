@@ -1,7 +1,7 @@
 package me.telegram.getplaybot.challenge.models
 
+import me.telegram.getplaybot.challenge.models.ResultWinner.*
 import org.junit.Assert.assertEquals
-import org.junit.Ignore
 import org.junit.Test
 
 class MatchResultTest {
@@ -20,6 +20,22 @@ class MatchResultTest {
         printGraph(MatchResult(3, 3))
         println()
         printGraph(MatchResult(6, 4))
+    }
+
+
+    @Test
+    fun resultWinner() {
+        assertEquals(ResultWinner.valueOf(1), HOME)
+        assertEquals(ResultWinner.valueOf(0), DRAW)
+        assertEquals(ResultWinner.valueOf(-1), AWAY)
+    }
+
+    @Test
+    fun winner() {
+        assertEquals(HOME, MatchResult(2, 0).winner)
+        assertEquals(DRAW, MatchResult(0, 0).winner)
+        assertEquals(DRAW, MatchResult(1, 1).winner)
+        assertEquals(AWAY, MatchResult(0, 3).winner)
     }
 
     @Test

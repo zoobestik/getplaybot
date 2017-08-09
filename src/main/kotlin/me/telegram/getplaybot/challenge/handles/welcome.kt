@@ -2,8 +2,8 @@ package me.telegram.getplaybot.challenge.handles
 
 import me.telegram.getplaybot.challenge.i18n.commands.i18n
 import me.telegram.getplaybot.challenge.i18n.welcome
-import me.telegram.getplaybot.challenge.models.Permission
-import me.telegram.getplaybot.challenge.models.User
+import me.telegram.getplaybot.challenge.models.game.Permission
+import me.telegram.getplaybot.challenge.models.game.User
 import me.telegram.getplaybot.challenge.services.users.save
 import me.telegram.getplaybot.lib.TelegramUser
 

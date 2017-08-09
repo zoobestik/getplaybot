@@ -1,7 +1,7 @@
 package me.telegram.getplaybot.challenge.services.users
 
-import me.telegram.getplaybot.challenge.models.User
-import me.telegram.getplaybot.challenge.models.permissionsAdmin
+import me.telegram.getplaybot.challenge.models.game.User
+import me.telegram.getplaybot.challenge.models.game.permissionsAdmin
 import org.telegram.telegrambots.api.objects.User as TelegramUser
 
 private val users = mutableMapOf<Int, User>(

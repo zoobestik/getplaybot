@@ -9,7 +9,7 @@ import me.telegram.getplaybot.challenge.handles.registration.handleRegisterInvit
 import me.telegram.getplaybot.challenge.handles.stats.handleMatchDay
 import me.telegram.getplaybot.challenge.handles.stats.handleMe
 import me.telegram.getplaybot.challenge.handles.stats.handleScores
-import me.telegram.getplaybot.challenge.models.User
+import me.telegram.getplaybot.challenge.models.game.User
 import me.telegram.getplaybot.challenge.services.users.get
 import me.telegram.getplaybot.lib.getEnv
 import org.telegram.telegrambots.api.methods.send.SendMessage

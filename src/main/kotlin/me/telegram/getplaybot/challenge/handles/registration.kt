@@ -2,7 +2,7 @@ package me.telegram.getplaybot.challenge.handles.registration
 
 import me.telegram.getplaybot.challenge.i18n.registration.done
 import me.telegram.getplaybot.challenge.i18n.registration.i18n
-import me.telegram.getplaybot.challenge.models.User
+import me.telegram.getplaybot.challenge.models.game.User
 import me.telegram.getplaybot.challenge.services.invites.*
 import me.telegram.getplaybot.challenge.services.leagues.LeagueNotFound
 import me.telegram.getplaybot.challenge.services.leagues.TeamAlreadyIn

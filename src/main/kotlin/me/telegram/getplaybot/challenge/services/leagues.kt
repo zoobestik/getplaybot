@@ -1,8 +1,8 @@
 package me.telegram.getplaybot.challenge.services.leagues
 
-import me.telegram.getplaybot.challenge.models.League
-import me.telegram.getplaybot.challenge.models.Team
-import me.telegram.getplaybot.challenge.models.User
+import me.telegram.getplaybot.challenge.models.game.League
+import me.telegram.getplaybot.challenge.models.game.Team
+import me.telegram.getplaybot.challenge.models.game.User
 
 class TeamAlreadyIn : Exception()
 
