@@ -1,4 +1,4 @@
-package me.telegram.getplaybot.challenge.models
+package me.telegram.getplaybot.challenge.domain
 
 import me.telegram.getplaybot.lib.IntWinner
 import me.telegram.getplaybot.lib.IntWinner.*

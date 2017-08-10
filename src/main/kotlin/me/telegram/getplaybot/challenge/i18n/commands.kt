@@ -5,7 +5,10 @@ import me.telegram.getplaybot.lib.i18n
 private val list = mapOf(
     "scores" to "посмтреть таблицу результатов",
     "invite" to "получить инвайт–ссылку для друга",
-    "reg" to "принять приглашение для участия в турнире"
+    "reg" to "принять приглашение для участия в турнире",
+    "day" to "последние результаты",
+    "leagues" to "список турниров",
+    "league-add" to "создать новый турнир"
 )
 
 fun i18n(key: String) = i18n(list, key)

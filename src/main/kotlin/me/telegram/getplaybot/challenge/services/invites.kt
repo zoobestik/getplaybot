@@ -1,11 +1,12 @@
 package me.telegram.getplaybot.challenge.services.invites
 
-import me.telegram.getplaybot.challenge.models.game.Invite
-import me.telegram.getplaybot.challenge.models.game.Permission
-import me.telegram.getplaybot.challenge.models.game.User
+import me.telegram.getplaybot.challenge.domain.game.Invite
+import me.telegram.getplaybot.challenge.domain.game.Permission
+import me.telegram.getplaybot.challenge.domain.game.User
+import me.telegram.getplaybot.challenge.services.leagues.addTeam
 import java.util.*
 import java.util.UUID.randomUUID
-import me.telegram.getplaybot.challenge.services.leagues.add as addToLeague
+import me.telegram.getplaybot.challenge.services.team.add as createTeam
 
 private val invites = mutableMapOf<String, Invite>()
 
@@ -35,10 +36,10 @@ suspend fun register(code: String, user: User): Invite {
     val invite = get(code)
     if (invite == null || !invite.isActive) throw InviteCodeInvalid()
 
-    addToLeague(invite.leagueId, user)
+    addTeam(invite.leagueId, createTeam(user))
 
-    invite.approveUserId = user.id
     invite.approveDate = Date()
+    invite.approveUserId = user.id
 
     return invite
 }

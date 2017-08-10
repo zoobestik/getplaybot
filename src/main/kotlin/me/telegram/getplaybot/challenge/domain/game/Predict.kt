@@ -1,7 +1,7 @@
-package me.telegram.getplaybot.challenge.models.game
+package me.telegram.getplaybot.challenge.domain.game
 
-import me.telegram.getplaybot.challenge.models.MatchResult
-import me.telegram.getplaybot.challenge.models.sport.Match
+import me.telegram.getplaybot.challenge.domain.MatchResult
+import me.telegram.getplaybot.challenge.domain.sport.Match
 
 class PredictNotComplete : Exception()
 

@@ -1,27 +1,23 @@
 package me.telegram.getplaybot.challenge.services.leagues
 
-import me.telegram.getplaybot.challenge.models.game.League
-import me.telegram.getplaybot.challenge.models.game.Team
-import me.telegram.getplaybot.challenge.models.game.User
-
-class TeamAlreadyIn : Exception()
-
-private val leagues = mapOf(
-    "champions-2017" to League("champions-2017")
-)
-
-private val teams: MutableList<Team> = mutableListOf()
+import me.telegram.getplaybot.challenge.domain.game.League
+import me.telegram.getplaybot.challenge.domain.game.Team
+import me.telegram.getplaybot.challenge.services.team.TeamNotFound
+import me.telegram.getplaybot.challenge.services.team.get as team
+import me.telegram.getplaybot.challenge.services.users.get as user
 
 class LeagueNotFound : Exception()
 
+private val leagues = mutableMapOf<String, League>()
+
 suspend fun get(id: String): League? = leagues[id]
 
-suspend fun add(leagueId: String, user: User) {
-    val userId = user.id
-    val league = get(leagueId) ?: throw LeagueNotFound()
-    if (league.teams.any { userId == it.userId }) throw TeamAlreadyIn()
+suspend fun addTeam(leagueId: String, teamId: String) {
+    val team = team(teamId) ?: throw TeamNotFound()
+    return addTeam(leagueId, team)
+}
 
-    val team = Team(teams.size.toString(), user.id)
-    teams.add(team)
+suspend fun addTeam(leagueId: String, team: Team) {
+    val league = get(leagueId) ?: throw LeagueNotFound()
     league.teams.add(team)
 }

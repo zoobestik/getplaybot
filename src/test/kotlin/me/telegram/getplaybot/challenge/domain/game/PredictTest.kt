@@ -1,7 +1,7 @@
-package me.telegram.getplaybot.challenge.models.game
+package me.telegram.getplaybot.challenge.domain.game
 
-import me.telegram.getplaybot.challenge.models.MatchResult
-import me.telegram.getplaybot.challenge.models.match
+import me.telegram.getplaybot.challenge.domain.MatchResult
+import me.telegram.getplaybot.challenge.domain.match
 import org.junit.Test
 import kotlin.test.*
 

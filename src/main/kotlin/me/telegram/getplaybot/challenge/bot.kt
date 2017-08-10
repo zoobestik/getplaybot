@@ -2,6 +2,8 @@ package me.telegram.getplaybot.challenge
 
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
+import me.telegram.getplaybot.challenge.domain.game.User
+import me.telegram.getplaybot.challenge.handles.handleHelp
 import me.telegram.getplaybot.challenge.handles.handleVote
 import me.telegram.getplaybot.challenge.handles.handleWelcome
 import me.telegram.getplaybot.challenge.handles.registration.handleRegisterApprove
@@ -9,7 +11,6 @@ import me.telegram.getplaybot.challenge.handles.registration.handleRegisterInvit
 import me.telegram.getplaybot.challenge.handles.stats.handleMatchDay
 import me.telegram.getplaybot.challenge.handles.stats.handleMe
 import me.telegram.getplaybot.challenge.handles.stats.handleScores
-import me.telegram.getplaybot.challenge.models.game.User
 import me.telegram.getplaybot.challenge.services.users.get
 import me.telegram.getplaybot.lib.getEnv
 import org.telegram.telegrambots.api.methods.send.SendMessage
@@ -25,8 +26,13 @@ typealias MessagePhotoBody = suspend (SendPhoto) -> Unit
 abstract class TextHandle(val name: String) {
     abstract suspend fun execute(message: Message, user: User, payload: String)
 
-    fun isDo(text: String) = text == "/$name" || text.startsWith("/$name ")
-    fun getPayload(text: String) = text.removePrefix("/$name").trim()
+    fun startsOf(text: String) = text.toLowerCase().let {
+        val prefix = "/$name"
+        if (it == prefix || it.startsWith("$prefix ")) prefix.length else 0
+    }
+
+    fun isDo(text: String) = startsOf(text) != 0
+    fun getPayload(text: String) = text.drop(startsOf(text)).trim()
 
     suspend fun run(message: Message, user: User, text: String) =
         execute(message, user, getPayload(text))
@@ -47,19 +53,26 @@ class ChallengeHandlers : TelegramLongPollingBot() {
     val handlers = listOf(
         object : TextHandle("start") {
             suspend override fun execute(message: Message, user: User, payload: String) {
-                if (payload.isNotEmpty()) markdown(message) { handleRegisterApprove(user, payload) }
+                var postText: String? = null
+                if (payload.isNotEmpty()) postText = handleRegisterApprove(user, payload)
                 markdown(message) { handleWelcome(user, message.from) }
+                if (postText != null) markdown(message) { postText as String }
+            }
+        },
+        object : TextHandle("help") {
+            suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
+                handleHelp(user)
             }
         },
 
         object : TextHandle("scores") {
             suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
-                handleScores()
+                handleScores(user, payload)
             }
         },
-        object : TextHandle("last") {
+        object : TextHandle("day") {
             suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
-                handleMatchDay()
+                handleMatchDay(user, payload)
             }
         },
 
@@ -76,7 +89,7 @@ class ChallengeHandlers : TelegramLongPollingBot() {
 
         object : TextHandle("invite") {
             suspend override fun execute(message: Message, user: User, payload: String) {
-                handleRegisterInvite(user, botUsername).forEach { text -> markdown(message) { text } }
+                handleRegisterInvite(user, botUsername, payload).forEach { text -> markdown(message) { text } }
             }
         },
         object : TextHandle("reg") {
@@ -90,8 +103,7 @@ class ChallengeHandlers : TelegramLongPollingBot() {
         val id = message.from.id
         val text = message.text.trim()
         val user = get(id) ?: User(id, message.chatId)
-        val handle = handlers.find { it.isDo(text) } ?:
-            return
+        val handle = handlers.find { it.isDo(text) } ?: return
 
         handle.run(message, user, text)
     }

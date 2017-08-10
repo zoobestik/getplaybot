@@ -1,8 +1,8 @@
-package me.telegram.getplaybot.challenge.models.game
+package me.telegram.getplaybot.challenge.domain.game
 
-import me.telegram.getplaybot.challenge.models.MatchResult
-import me.telegram.getplaybot.challenge.models.predict
-import me.telegram.getplaybot.challenge.models.round
+import me.telegram.getplaybot.challenge.domain.MatchResult
+import me.telegram.getplaybot.challenge.domain.predict
+import me.telegram.getplaybot.challenge.domain.round
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
