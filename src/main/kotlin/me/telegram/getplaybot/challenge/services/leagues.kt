@@ -12,6 +12,14 @@ private val leagues = mutableMapOf<String, League>()
 
 suspend fun get(id: String): League? = leagues[id]
 
+suspend fun list(): Collection<League> = leagues.values
+
+suspend fun createOrUpdate(id: String, name: String): League {
+    val league = leagues.computeIfPresent(id) { _, league -> league.copy(name = name) } ?: League(id, name)
+    leagues[league.id] = league
+    return league
+}
+
 suspend fun addTeam(leagueId: String, teamId: String) {
     val team = team(teamId) ?: throw TeamNotFound()
     return addTeam(leagueId, team)

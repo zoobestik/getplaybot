@@ -9,7 +9,7 @@ private val teams: MutableMap<String, Team> = mutableMapOf()
 
 suspend fun get(id: String): Team? = teams[id]
 
-suspend fun add(user: User?): Team {
+suspend fun new(user: User?): Team {
     val team = Team(teams.size.toString(), user)
     teams[team.id] = team
     return team

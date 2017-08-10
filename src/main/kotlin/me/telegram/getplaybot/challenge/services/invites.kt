@@ -6,7 +6,7 @@ import me.telegram.getplaybot.challenge.domain.game.User
 import me.telegram.getplaybot.challenge.services.leagues.addTeam
 import java.util.*
 import java.util.UUID.randomUUID
-import me.telegram.getplaybot.challenge.services.team.add as createTeam
+import me.telegram.getplaybot.challenge.services.team.new as createTeam
 
 private val invites = mutableMapOf<String, Invite>()
 

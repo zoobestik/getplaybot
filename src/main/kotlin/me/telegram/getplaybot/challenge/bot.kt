@@ -6,6 +6,8 @@ import me.telegram.getplaybot.challenge.domain.game.User
 import me.telegram.getplaybot.challenge.handles.handleHelp
 import me.telegram.getplaybot.challenge.handles.handleVote
 import me.telegram.getplaybot.challenge.handles.handleWelcome
+import me.telegram.getplaybot.challenge.handles.league.handleLeagues
+import me.telegram.getplaybot.challenge.handles.league.handleNewLeague
 import me.telegram.getplaybot.challenge.handles.registration.handleRegisterApprove
 import me.telegram.getplaybot.challenge.handles.registration.handleRegisterInvite
 import me.telegram.getplaybot.challenge.handles.stats.handleMatchDay
@@ -65,6 +67,11 @@ class ChallengeHandlers : TelegramLongPollingBot() {
             }
         },
 
+        object : TextHandle("leagues") {
+            suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
+                handleLeagues()
+            }
+        },
         object : TextHandle("scores") {
             suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
                 handleScores(user, payload)
@@ -73,6 +80,11 @@ class ChallengeHandlers : TelegramLongPollingBot() {
         object : TextHandle("day") {
             suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
                 handleMatchDay(user, payload)
+            }
+        },
+        object : TextHandle("reg") {
+            suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
+                handleRegisterApprove(user, payload)
             }
         },
 
@@ -92,9 +104,9 @@ class ChallengeHandlers : TelegramLongPollingBot() {
                 handleRegisterInvite(user, botUsername, payload).forEach { text -> markdown(message) { text } }
             }
         },
-        object : TextHandle("reg") {
+        object : TextHandle("addleague") {
             suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
-                handleRegisterApprove(user, payload)
+                handleNewLeague(user, payload)
             }
         }
     )

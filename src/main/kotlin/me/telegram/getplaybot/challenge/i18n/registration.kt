@@ -3,7 +3,7 @@ package me.telegram.getplaybot.challenge.i18n.registration
 import me.telegram.getplaybot.lib.i18n
 
 private val list = mapOf(
-    "invite-param-require" to "*Не нашлось кода активации.* Попробуй:\n" +
+    "invite-param-require" to "Не нашлось кода активации. Попробуй:\n" +
         "`/reg [CODE]` — заменив *[CODE]* на что-то более приличное.",
     "invite-code-invalid" to "*Инвайт–ссылка сломалась или уже использована :(*",
     "invite-codes-absent" to "*У вас нет инвайтов, поищите в другом месте :(*",

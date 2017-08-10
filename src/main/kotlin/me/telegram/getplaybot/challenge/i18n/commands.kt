@@ -8,7 +8,7 @@ private val list = mapOf(
     "reg" to "принять приглашение для участия в турнире",
     "day" to "последние результаты",
     "leagues" to "список турниров",
-    "league-add" to "создать новый турнир"
+    "addleague" to "создать новую лигу или обновить имя текущую."
 )
 
 fun i18n(key: String) = i18n(list, key)

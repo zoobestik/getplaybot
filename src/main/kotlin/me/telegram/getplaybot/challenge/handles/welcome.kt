@@ -30,7 +30,7 @@ val longHelp = shortHelp + listOf(
     Feature("invite", Permission.INVITE),
     Feature("leagues", Permission.LEAGUE, listOf(
         "leagues",
-        "leagueadd"
+        "addleague"
     ))
 )
 
