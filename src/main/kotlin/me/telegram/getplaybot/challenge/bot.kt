@@ -15,6 +15,7 @@ import me.telegram.getplaybot.challenge.handles.stats.handleMe
 import me.telegram.getplaybot.challenge.handles.stats.handleScores
 import me.telegram.getplaybot.challenge.services.users.get
 import me.telegram.getplaybot.lib.getEnv
+import me.telegram.getplaybot.lib.replyWithCallbacks
 import org.telegram.telegrambots.api.methods.send.SendMessage
 import org.telegram.telegrambots.api.methods.send.SendPhoto
 import org.telegram.telegrambots.api.objects.Message
@@ -35,6 +36,7 @@ abstract class TextHandle(val name: String) {
 
     fun isDo(text: String) = startsOf(text) != 0
     fun getPayload(text: String) = text.drop(startsOf(text)).trim()
+    fun replyCallbacks(message: SendMessage) = replyWithCallbacks(message, this.name)
 
     suspend fun run(message: Message, user: User, text: String) =
         execute(message, user, getPayload(text))
@@ -46,8 +48,14 @@ class ChallengeHandlers : TelegramLongPollingBot() {
 
     override fun onUpdateReceived(update: Update?) {
         launch(CommonPool) {
-            update?.message?.let { message ->
-                if (message.hasText()) handleIncomingTextMessage(message)
+            if (update != null) {
+                if (update.hasCallbackQuery()) {
+                    val text = update.callbackQuery.data ?: ""
+                    if (text.startsWith("/"))
+                        handleIncomingTextMessage(update.callbackQuery.message, text)
+                } else update.message?.let { message ->
+                    if (message.hasText()) handleIncomingTextMessage(message, message.text)
+                }
             }
         }
     }
@@ -74,7 +82,7 @@ class ChallengeHandlers : TelegramLongPollingBot() {
         },
         object : TextHandle("scores") {
             suspend override fun execute(message: Message, user: User, payload: String) = markdown(message) {
-                handleScores(user, payload)
+                handleScores(user, payload, this.replyCallbacks(it))
             }
         },
         object : TextHandle("day") {
@@ -111,9 +119,9 @@ class ChallengeHandlers : TelegramLongPollingBot() {
         }
     )
 
-    suspend fun handleIncomingTextMessage(message: Message) {
+    suspend fun handleIncomingTextMessage(message: Message, original: String) {
         val id = message.from.id
-        val text = message.text.trim()
+        val text = original.trim()
         val user = get(id) ?: User(id, message.chatId)
         val handle = handlers.find { it.isDo(text) } ?: return
 

@@ -10,7 +10,7 @@ suspend fun handleLeagues(): String {
     val list = list()
     return if (list.isEmpty()) i18n("leagues-no-anyone") else
         list
-            .mapIndexed { index, (id, name) -> "${index + 1}. $name ($id)" }
+            .mapIndexed { index, (id, name) -> "${index + 1}. *$name* [$id]" }
             .joinToString("\n")
 }
 

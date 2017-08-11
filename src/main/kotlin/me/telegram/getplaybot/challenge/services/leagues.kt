@@ -12,7 +12,8 @@ private val leagues = mutableMapOf<String, League>()
 
 suspend fun get(id: String): League? = leagues[id]
 
-suspend fun list(): Collection<League> = leagues.values
+suspend fun list(): List<League> = leagues.values.toList()
+suspend fun listOfActive(): List<League> = leagues.values.toList()
 
 suspend fun createOrUpdate(id: String, name: String): League {
     val league = leagues.computeIfPresent(id) { _, league -> league.copy(name = name) } ?: League(id, name)

@@ -1,6 +1,6 @@
 package me.telegram.getplaybot.challenge.domain.game
 
-typealias Wizard = Pair<String, String>
+typealias Wizard = Pair<String, Any>
 
 data class User(
     val id: Int,

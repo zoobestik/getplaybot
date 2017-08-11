@@ -4,7 +4,7 @@ import me.telegram.getplaybot.challenge.domain.game.User
 import me.telegram.getplaybot.challenge.domain.game.permissionsAdmin
 import org.telegram.telegrambots.api.objects.User as TelegramUser
 
-val users = mutableMapOf(
+val users = mutableMapOf<Int, User>(
     4809181 to User(4809181, null, permissions = permissionsAdmin)
 )
 

@@ -32,7 +32,7 @@ suspend fun handleRegisterInvite(user: User, botUsername: String, leagueId: Stri
 suspend fun registerInvite(user: User, botUsername: String, leagueId: String): String {
     try {
         val code = invite(user, leagueId).code
-        return "https://telegram.me/$botUsername?start=$code"
+        return "https://t.me/$botUsername?start=$code"
     } catch (e: Exception) {
         return approveError(e)
     }
