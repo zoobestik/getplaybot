@@ -1,6 +1,6 @@
-package me.telegram.getplaybot.challenge.i18n.commands
+package me.telegram.getplaybot.challenge.labels.commands
 
-import me.telegram.getplaybot.lib.i18n
+import me.telegram.getplaybot.lib.label
 
 private val list = mapOf(
     "scores" to "посмтреть таблицу результатов",
@@ -13,4 +13,4 @@ private val list = mapOf(
     "addleague" to "создать новую лигу или обновить имя текущую"
 )
 
-fun i18n(key: String) = i18n(list, key)
+fun label(key: String) = label(list, key)

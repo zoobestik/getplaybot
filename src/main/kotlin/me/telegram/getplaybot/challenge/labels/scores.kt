@@ -1,6 +1,6 @@
-package me.telegram.getplaybot.challenge.i18n.scores
+package me.telegram.getplaybot.challenge.labels.scores
 
-import me.telegram.getplaybot.lib.i18n
+import me.telegram.getplaybot.lib.label
 
 private val list = mapOf(
     "scores-no-leagues" to "Нет активных сорвенований",
@@ -11,4 +11,4 @@ private val list = mapOf(
     "day-no-league" to "Нет соревнования — нет матчей :("
 )
 
-fun i18n(key: String) = i18n(list, key)
+fun label(key: String) = label(list, key)

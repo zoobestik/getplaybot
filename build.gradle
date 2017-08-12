@@ -67,7 +67,7 @@ jar {
     manifest {
         attributes 'Main-Class': 'me.telegram.getplaybot.MainKt'
     }
-    baseName = project.name + '-all'
+    baseName = project.name + '-dist'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
 
@@ -75,6 +75,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.17"
     compile "org.telegram:telegrambots:3.2"
+    compile "org.slf4j:slf4j-simple:1.7.25"
     compile "org.apache.xmlgraphics:batik-transcoder:1.9"
     compile "org.apache.xmlgraphics:batik-codec:1.9"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"

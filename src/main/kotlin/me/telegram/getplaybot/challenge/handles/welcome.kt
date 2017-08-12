@@ -2,8 +2,8 @@ package me.telegram.getplaybot.challenge.handles
 
 import me.telegram.getplaybot.challenge.domain.game.Permission
 import me.telegram.getplaybot.challenge.domain.game.User
-import me.telegram.getplaybot.challenge.i18n.commands.i18n
-import me.telegram.getplaybot.challenge.i18n.welcome
+import me.telegram.getplaybot.challenge.labels.commands.label
+import me.telegram.getplaybot.challenge.labels.welcome
 import me.telegram.getplaybot.challenge.services.users.createOrUpdate
 import me.telegram.getplaybot.lib.TelegramUser
 
@@ -38,7 +38,7 @@ private fun helpCommands(user: User, features: List<Feature>) = features
     .filter { user.check(it.permission) }
     .fold(listOf<ChallengeCommand>()) { list, feature -> list + feature.commands }
     .map {
-        val desc = i18n(it)
+        val desc = label(it)
         "/$it" + if (desc != it) " — $desc" else ""
     }
     .joinToString("\n")

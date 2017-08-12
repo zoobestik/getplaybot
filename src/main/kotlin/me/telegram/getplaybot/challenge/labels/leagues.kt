@@ -1,12 +1,12 @@
-package me.telegram.getplaybot.challenge.i18n.leagues
+package me.telegram.getplaybot.challenge.labels.leagues
 
-import me.telegram.getplaybot.lib.i18n
+import me.telegram.getplaybot.lib.label
 
 private val list = mapOf(
     "list-no-items" to "Нет пока не одного соревнования :(",
 
-    "create-id-required" to "Не получилось найти `ID`. Это командой можно создать новую лигу " +
-        "или обновить имя текущей. Попробуй:\n" +
+    "create-id-required" to "Не получилось найти `ID`. Этой командой можно создать новую лигу " +
+        "или обновить настройки для уже созданной. Попробуй:\n" +
         "`/addleague ID [SCHEME] [SCHEME_ARGS] NAME...`",
     "create-type-required" to "Для создания лиги необходимо указать `SCHEME`!",
     "create-type-illegal" to "Не смог найти подходящую схему! :(",
@@ -17,4 +17,4 @@ private val list = mapOf(
 
 fun textLeagueCreated(name: String) = "Лига *$name* готова!"
 
-fun i18n(key: String) = i18n(list, key)
+fun label(key: String) = label(list, key)

@@ -13,8 +13,10 @@ import me.telegram.getplaybot.challenge.handles.registration.handleRegisterInvit
 import me.telegram.getplaybot.challenge.handles.stats.handleMatchDay
 import me.telegram.getplaybot.challenge.handles.stats.handleMe
 import me.telegram.getplaybot.challenge.handles.stats.handleScores
+import me.telegram.getplaybot.challenge.labels.label
 import me.telegram.getplaybot.challenge.services.users.get
 import me.telegram.getplaybot.lib.getEnv
+import me.telegram.getplaybot.lib.logger
 import me.telegram.getplaybot.lib.replyWithCallbacks
 import org.telegram.telegrambots.api.methods.send.SendMessage
 import org.telegram.telegrambots.api.methods.send.SendPhoto
@@ -43,6 +45,10 @@ abstract class TextHandle(val name: String) {
 }
 
 class ChallengeHandlers : TelegramLongPollingBot() {
+    companion object {
+        val log by logger()
+    }
+
     override fun getBotToken(): String = getEnv("BOT_CHALLENGE_TOKEN")
     override fun getBotUsername(): String = getEnv("BOT_CHALLENGE_NAME")
 
@@ -120,12 +126,17 @@ class ChallengeHandlers : TelegramLongPollingBot() {
     )
 
     suspend fun handleIncomingTextMessage(message: Message, original: String) {
-        val id = message.from.id
-        val text = original.trim()
-        val user = get(id) ?: User(id, message.chatId)
-        val handle = handlers.find { it.isDo(text) } ?: return
+        try {
+            val id = message.from.id
+            val text = original.trim()
+            val user = get(id) ?: User(id, message.chatId)
+            val handle = handlers.find { it.isDo(text) } ?: return
 
-        handle.run(message, user, text)
+            handle.run(message, user, text)
+        } catch (e: Exception) {
+            log.error("Unexpected text message error", e)
+            markdown(message) { label("unexpected-error")  }
+        }
     }
 
     suspend fun send(message: Message, body: MessageBody): Unit {

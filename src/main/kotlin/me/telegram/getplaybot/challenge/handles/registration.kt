@@ -1,26 +1,11 @@
 package me.telegram.getplaybot.challenge.handles.registration
 
 import me.telegram.getplaybot.challenge.domain.game.User
-import me.telegram.getplaybot.challenge.i18n.registration.done
-import me.telegram.getplaybot.challenge.i18n.registration.i18n
+import me.telegram.getplaybot.challenge.labels.registration.done
+import me.telegram.getplaybot.challenge.labels.registration.label
 import me.telegram.getplaybot.challenge.services.invites.*
 import me.telegram.getplaybot.challenge.services.leagues.LeagueNotFound
-import me.telegram.getplaybot.lib.bindText
-import me.telegram.getplaybot.challenge.i18n.registration.remains as remainsText
-
-class InviteParamRequire : Exception()
-
-val approveError = bindText { e: Exception ->
-    i18n(
-        when (e) {
-            is InviteParamRequire -> "invite-param-require"
-            is InviteCodeInvalid -> "invite-code-invalid"
-            is InviteCodesAbsent -> "invite-codes-absent"
-            is LeagueNotFound -> "league-not-found"
-            else -> throw e
-        }
-    )
-}
+import me.telegram.getplaybot.challenge.labels.registration.remains as remainsText
 
 suspend fun handleRegisterInvite(user: User, botUsername: String, leagueId: String): List<String> {
     val messages = mutableListOf(registerInvite(user, botUsername, leagueId))
@@ -33,17 +18,19 @@ suspend fun registerInvite(user: User, botUsername: String, leagueId: String): S
     try {
         val code = invite(user, leagueId).code
         return "https://t.me/$botUsername?start=$code"
-    } catch (e: Exception) {
-        return approveError(e)
+    } catch (e: InviteCodesAbsent) {
+        return label("invite-codes-absent")
     }
 }
 
 suspend fun handleRegisterApprove(user: User, code: String): String {
     try {
-        if (code.isEmpty()) throw InviteParamRequire()
+        if (code.isEmpty()) return "approve-code-require"
         val invite = register(code, user)
         return done(invite.leagueId)
-    } catch (e: Exception) {
-        return approveError(e)
+    } catch (e: LeagueNotFound) {
+        return label("approve-league-absent")
+    } catch (e: InviteCodeInvalid) {
+        return label("approve-code-invalid")
     }
 }
