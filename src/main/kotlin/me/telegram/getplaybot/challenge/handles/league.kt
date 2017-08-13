@@ -37,14 +37,11 @@ suspend fun handleNewLeague(user: User, payload: String): String {
         createOrUpdate(league)
 
         return textLeagueCreated(league.name)
-    } catch (e: Exception) {
-        return label(
-            when (e) {
-                is LeagueSchemeNameRequired -> "create-name-required"
-                is LeagueSchemeYearInvalid -> "create-year-invalid"
-                is LeagueSchemeChampionsYearRequired -> "create-year-required"
-                else -> throw e
-            }
-        )
+    } catch (e: LeagueSchemeNameRequired) {
+        return label("create-name-required")
+    } catch (e: LeagueSchemeYearInvalid) {
+        return label("create-year-invalid")
+    } catch (e: LeagueSchemeChampionsYearRequired) {
+        return label("create-year-required")
     }
 }

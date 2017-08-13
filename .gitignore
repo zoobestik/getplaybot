@@ -5,6 +5,7 @@ Thumbs.db
 *.swp
 
 .gradle
+logs
 build
 gradle
 gradlew

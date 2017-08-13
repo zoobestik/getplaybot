@@ -18,11 +18,14 @@ import me.telegram.getplaybot.challenge.services.users.get
 import me.telegram.getplaybot.lib.getEnv
 import me.telegram.getplaybot.lib.logger
 import me.telegram.getplaybot.lib.replyWithCallbacks
+import org.slf4j.LoggerFactory
 import org.telegram.telegrambots.api.methods.send.SendMessage
 import org.telegram.telegrambots.api.methods.send.SendPhoto
 import org.telegram.telegrambots.api.objects.Message
 import org.telegram.telegrambots.api.objects.Update
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
+
+private val logRequest = LoggerFactory.getLogger("ChallengeHandlersRequests")
 
 typealias MessageBody = suspend (SendMessage) -> Unit
 typealias MessageTextBody = suspend (SendMessage) -> String
@@ -53,8 +56,10 @@ class ChallengeHandlers : TelegramLongPollingBot() {
     override fun getBotUsername(): String = getEnv("BOT_CHALLENGE_NAME")
 
     override fun onUpdateReceived(update: Update?) {
+        logRequest.info("New update received with {}", update)
         launch(CommonPool) {
             if (update != null) {
+                val millisStarted = System.currentTimeMillis()
                 if (update.hasCallbackQuery()) {
                     val text = update.callbackQuery.data ?: ""
                     if (text.startsWith("/"))
@@ -62,6 +67,8 @@ class ChallengeHandlers : TelegramLongPollingBot() {
                 } else update.message?.let { message ->
                     if (message.hasText()) handleIncomingTextMessage(message, message.text)
                 }
+                val finishTime = System.currentTimeMillis() - millisStarted
+                logRequest.info("Processing of update [{}] ended with – {} ms", update.updateId, finishTime)
             }
         }
     }
@@ -131,11 +138,11 @@ class ChallengeHandlers : TelegramLongPollingBot() {
             val text = original.trim()
             val user = get(id) ?: User(id, message.chatId)
             val handle = handlers.find { it.isDo(text) } ?: return
-
+            log.info("New action [{}] found from {}", handle.name, user.id)
             handle.run(message, user, text)
         } catch (e: Exception) {
-            log.error("Unexpected text message error", e)
-            markdown(message) { label("unexpected-error")  }
+            log.error("Unexpected message error", e)
+            markdown(message) { label("unexpected-error") }
         }
     }
 

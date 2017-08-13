@@ -4,9 +4,12 @@ import me.telegram.getplaybot.challenge.domain.game.Invite
 import me.telegram.getplaybot.challenge.domain.game.Permission
 import me.telegram.getplaybot.challenge.domain.game.User
 import me.telegram.getplaybot.challenge.services.leagues.addTeam
+import org.slf4j.LoggerFactory
 import java.util.*
 import java.util.UUID.randomUUID
 import me.telegram.getplaybot.challenge.services.team.new as createTeam
+
+private val log = LoggerFactory.getLogger("InvitesServices")
 
 private val invites = mutableMapOf<String, Invite>()
 
@@ -25,6 +28,8 @@ suspend fun invite(user: User, leagueId: String): Invite {
     val invite = Invite(user.id, uuid, leagueId)
     invites.put(invite.code, invite)
 
+    log.info("Invite generated {}", invite)
+
     return invite
 }
 
@@ -40,6 +45,8 @@ suspend fun register(code: String, user: User): Invite {
 
     invite.approveDate = Date()
     invite.approveUserId = user.id
+
+    log.info("Invite approved {}", invite)
 
     return invite
 }

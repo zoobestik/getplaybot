@@ -25,7 +25,7 @@ suspend fun registerInvite(user: User, botUsername: String, leagueId: String): S
 
 suspend fun handleRegisterApprove(user: User, code: String): String {
     try {
-        if (code.isEmpty()) return "approve-code-require"
+        if (code.isEmpty()) return label("approve-code-require")
         val invite = register(code, user)
         return done(invite.leagueId)
     } catch (e: LeagueNotFound) {

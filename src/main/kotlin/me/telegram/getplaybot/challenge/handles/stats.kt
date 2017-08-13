@@ -41,5 +41,5 @@ suspend fun handleMatchDay(user: User, lid: String): String {
 }
 
 suspend fun handleMe(user: User): String {
-    return "me" // @ToDo: информация о команде
+    throw Exception("Not implemented")
 }
