@@ -15,6 +15,7 @@ import me.telegram.getplaybot.challenge.handles.stats.handleMe
 import me.telegram.getplaybot.challenge.handles.stats.handleScores
 import me.telegram.getplaybot.challenge.labels.label
 import me.telegram.getplaybot.challenge.services.users.get
+import me.telegram.getplaybot.lib.TelegramUser
 import me.telegram.getplaybot.lib.getEnv
 import me.telegram.getplaybot.lib.logger
 import me.telegram.getplaybot.lib.replyWithCallbacks
@@ -52,6 +53,9 @@ class ChallengeHandlers : TelegramLongPollingBot() {
         val log by logger()
     }
 
+    val botlink
+        get() = "https://t.me/$botUsername"
+
     override fun getBotToken(): String = getEnv("BOT_CHALLENGE_TOKEN")
     override fun getBotUsername(): String = getEnv("BOT_CHALLENGE_NAME")
 
@@ -61,9 +65,10 @@ class ChallengeHandlers : TelegramLongPollingBot() {
             if (update != null) {
                 val millisStarted = System.currentTimeMillis()
                 if (update.hasCallbackQuery()) {
-                    val text = update.callbackQuery.data ?: ""
+                    val query = update.callbackQuery
+                    val text = query.data ?: ""
                     if (text.startsWith("/"))
-                        handleIncomingTextMessage(update.callbackQuery.message, text)
+                        handleIncomingTextMessage(query.message, text, query.from)
                 } else update.message?.let { message ->
                     if (message.hasText()) handleIncomingTextMessage(message, message.text)
                 }
@@ -122,7 +127,9 @@ class ChallengeHandlers : TelegramLongPollingBot() {
 
         object : TextHandle("invite") {
             suspend override fun execute(message: Message, user: User, payload: String) {
-                handleRegisterInvite(user, botUsername, payload).forEach { text -> markdown(message) { text } }
+                markdown(message, handleRegisterInvite(user, botlink, payload)) { next, msg ->
+                    next(this.replyCallbacks(msg))
+                }
             }
         },
         object : TextHandle("addleague") {
@@ -132,9 +139,10 @@ class ChallengeHandlers : TelegramLongPollingBot() {
         }
     )
 
-    suspend fun handleIncomingTextMessage(message: Message, original: String) {
+    suspend fun handleIncomingTextMessage(message: Message, original: String, messageFrom: TelegramUser? = null) {
         try {
-            val id = message.from.id
+            val from = messageFrom ?: message.from
+            val id = from.id
             val text = original.trim()
             val user = get(id) ?: User(id, message.chatId)
             val handle = handlers.find { it.isDo(text) } ?: return
@@ -146,24 +154,32 @@ class ChallengeHandlers : TelegramLongPollingBot() {
         }
     }
 
-    suspend fun send(message: Message, body: MessageBody): Unit {
+    suspend fun send(message: Message, block: MessageBody): Unit {
         val reply = SendMessage()
         reply.setChatId(message.chatId)
-        body(reply)
+        block(reply)
         sendMessage(reply)
     }
 
-    suspend fun image(message: Message, body: MessagePhotoBody): Unit {
+    suspend fun image(message: Message, block: MessagePhotoBody): Unit {
         val reply = SendPhoto()
         reply.setChatId(message.chatId)
-        body(reply)
+        block(reply)
         sendPhoto(reply)
     }
 
-    suspend fun markdown(message: Message, body: MessageTextBody): Unit {
+    suspend fun markdown(message: Message, block: MessageTextBody): Unit {
         send(message) {
             it.enableMarkdown(true)
-            it.text = body(it)
+            it.text = block(it)
+        }
+    }
+
+    suspend fun <T> markdown(message: Message, iterator: Iterator<T>, body: (T, SendMessage) -> String): Unit {
+        while (iterator.hasNext()) {
+            markdown(message) {
+                body(iterator.next(), it)
+            }
         }
     }
 }
