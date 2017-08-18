@@ -10,7 +10,7 @@ fun getEnv(name: String) = System.getenv(name) ?: ""
 
 fun label(map: Map<String, String>, key: String) = map[key] ?: key
 
-fun<T> buildArgsIterator(vararg list: T) = listOf(*list).iterator()
+fun <T> buildArgsIterator(vararg list: T) = listOf(*list).iterator()
 
 fun pairArgs(str: String): Pair<String, String> {
     val split = str.split(" ", limit = 2)

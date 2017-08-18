@@ -1,6 +1,6 @@
 package me.telegram.getplaybot
 
-import me.telegram.getplaybot.challenge.ChallengeHandlers
+import me.telegram.getplaybot.challenge.bot.ChallengeHandlers
 import org.telegram.telegrambots.ApiContextInitializer
 import org.telegram.telegrambots.TelegramBotsApi
 import org.telegram.telegrambots.exceptions.TelegramApiException

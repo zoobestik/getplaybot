@@ -1,6 +1,6 @@
 package me.telegram.getplaybot.challenge.domain.game
 
-typealias Wizard = Pair<String, Any>
+typealias ChatStateMachine = Pair<String, Any>
 
 data class User(
     val id: Int,
@@ -9,7 +9,7 @@ data class User(
     val firstName: String = "Alan",
     val lastName: String = "Smithee",
     val defaultLeagueId: String? = null,
-    val wizard: Wizard? = null,
+    val wizard: ChatStateMachine? = null,
     val permissions: Permissions = permissionsDefault
 ) {
     val name: String

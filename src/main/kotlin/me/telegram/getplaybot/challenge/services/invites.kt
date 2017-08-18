@@ -3,6 +3,7 @@ package me.telegram.getplaybot.challenge.services.invites
 import me.telegram.getplaybot.challenge.domain.game.Invite
 import me.telegram.getplaybot.challenge.domain.game.Permission
 import me.telegram.getplaybot.challenge.domain.game.User
+import me.telegram.getplaybot.challenge.domain.game.leagues.League
 import me.telegram.getplaybot.challenge.services.leagues.addTeam
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -16,7 +17,7 @@ private val invites = mutableMapOf<String, Invite>()
 class InviteCodeInvalid : Exception()
 class InviteCodesAbsent : Exception()
 
-suspend fun invite(user: User, leagueId: String): Invite {
+suspend fun invite(user: User, league: League): Invite {
     if (!user.check(Permission.INVITE))
         throw InviteCodesAbsent()
 
@@ -25,7 +26,7 @@ suspend fun invite(user: User, leagueId: String): Invite {
     do uuid = randomUUID().toString()
     while (get(uuid) != null)
 
-    val invite = Invite(user.id, uuid, leagueId)
+    val invite = Invite(uuid, league, user)
     invites.put(invite.code, invite)
 
     log.info("Invite generated {}", invite)
@@ -41,10 +42,10 @@ suspend fun register(code: String, user: User): Invite {
     val invite = get(code)
     if (invite == null || !invite.isActive) throw InviteCodeInvalid()
 
-    addTeam(invite.leagueId, createTeam(user))
+    addTeam(invite.league.id, createTeam(user))
 
     invite.approveDate = Date()
-    invite.approveUserId = user.id
+    invite.approveUser = user
 
     log.info("Invite approved {}", invite)
 

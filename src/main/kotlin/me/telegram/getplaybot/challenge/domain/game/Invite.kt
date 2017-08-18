@@ -1,12 +1,13 @@
 package me.telegram.getplaybot.challenge.domain.game
 
+import me.telegram.getplaybot.challenge.domain.game.leagues.League
 import java.util.*
 
-data class Invite(
-    val senderId: Int,
+class Invite(
     val code: String,
-    val leagueId: String,
-    var approveUserId: Int? = null,
+    val league: League,
+    val sender: User,
+    var approveUser: User? = null,
     var approveDate: Date? = null
 ) {
     val isActive

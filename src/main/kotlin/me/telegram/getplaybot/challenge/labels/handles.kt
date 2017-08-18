@@ -1,9 +1,9 @@
-package me.telegram.getplaybot.challenge.labels.commands
+package me.telegram.getplaybot.challenge.labels.handles
 
 import me.telegram.getplaybot.lib.label
 
 private val list = mapOf(
-    "scores" to "посмтреть таблицу результатов",
+    "league" to "посмтреть таблицу результатов",
     "day" to "последние результаты",
     "vote" to "дать прогноз на тур",
     "help" to "полный список комманд, доступный вам",

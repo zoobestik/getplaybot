@@ -3,9 +3,9 @@ package me.telegram.getplaybot.challenge.domain.game
 import me.telegram.getplaybot.challenge.domain.MatchResult
 import me.telegram.getplaybot.challenge.domain.sport.Match
 
-class PredictNotComplete : Exception()
-
 typealias PredictPoints = Pair<Int, Int>
+
+class PredictNotComplete : Exception()
 
 fun defaultPredict() = MatchResult(0, 0)
 

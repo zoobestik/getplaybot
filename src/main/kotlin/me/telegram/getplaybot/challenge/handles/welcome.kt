@@ -2,7 +2,7 @@ package me.telegram.getplaybot.challenge.handles
 
 import me.telegram.getplaybot.challenge.domain.game.Permission
 import me.telegram.getplaybot.challenge.domain.game.User
-import me.telegram.getplaybot.challenge.labels.commands.label
+import me.telegram.getplaybot.challenge.labels.handles.label
 import me.telegram.getplaybot.challenge.labels.welcome
 import me.telegram.getplaybot.challenge.services.users.createOrUpdate
 import me.telegram.getplaybot.lib.TelegramUser
@@ -19,7 +19,7 @@ data class Feature(
 }
 
 val shortHelp = listOf(
-    Feature("scores"),
+    Feature("league"),
     Feature("day"),
     Feature("vote"),
     Feature("help")
@@ -37,11 +37,11 @@ val longHelp = shortHelp + listOf(
 private fun helpCommands(user: User, features: List<Feature>) = features
     .filter { user.check(it.permission) }
     .fold(listOf<ChallengeCommand>()) { list, feature -> list + feature.commands }
-    .map {
-        val desc = label(it)
-        "/$it" + if (desc != it) " — $desc" else ""
+    .joinToString("\n") { id ->
+        label(id).let { desc ->
+            "/$id" + if (id != desc) " — $desc" else ""
+        }
     }
-    .joinToString("\n")
 
 suspend fun handleWelcome(chatUser: User, from: TelegramUser): String {
     val user = createOrUpdate(chatUser.copy(
@@ -53,6 +53,4 @@ suspend fun handleWelcome(chatUser: User, from: TelegramUser): String {
     return welcome(user.name, helpCommands(user, shortHelp))
 }
 
-suspend fun handleHelp(user: User): String {
-    return helpCommands(user, longHelp)
-}
+suspend fun handleHelp(user: User): String = helpCommands(user, longHelp)
