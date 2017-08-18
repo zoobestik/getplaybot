@@ -32,7 +32,7 @@ class ChallengeHandlers : TelegramLongPollingBot() {
     override fun getBotUsername(): String = getEnv("BOT_CHALLENGE_NAME")
 
     val link get() = "https://t.me/$botUsername"
-    private val handlers = handlers(this)
+    val handlers = handlers(this)
 
     override fun onUpdateReceived(update: Update?) {
         logRequest.info("New update received with {}", update)
